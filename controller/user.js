@@ -50,8 +50,18 @@ const deleteUser = wrapAsync(async (req, res, next) => {
 
 // JWT認証
 const verifyUser = (req, res, next) => {
-  verifyToken(req, res, () => {
+  verifyToken(req, res, next, () => {
     if (req.user.id === req.params.id || req.user.isAdmin) {
+      next();
+    } else {
+      throw new AppError(403, "認証に失敗しました");
+    }
+  });
+};
+
+const verifyAdmin = (req, res, next) => {
+  verifyToken(req, res, () => {
+    if (req.user.isAdmin) {
       next();
     } else {
       throw new AppError(403, "認証に失敗しました");
@@ -66,4 +76,5 @@ export {
   updateUser,
   deleteUser,
   verifyUser,
+  verifyAdmin,
 };

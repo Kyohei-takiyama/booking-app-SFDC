@@ -8,6 +8,7 @@ import {
   getAllUser,
   getSingleUser,
   updateUser,
+  verifyAdmin,
   verifyUser,
 } from "../controller/user.js";
 import { verifyToken } from "../utils/verifyToken.js";
@@ -15,7 +16,7 @@ import { verifyToken } from "../utils/verifyToken.js";
 //===============================================GET
 // 全検索
 route.get("/", getAllUser);
-route.get("/checkauth", verifyToken, (req, res, next) => {
+route.get("/checkauth", verifyAdmin, (req, res, next) => {
   res.send("hello");
 });
 route.get("/checkuser/:id", verifyUser, (req, res, next) => {
@@ -23,13 +24,13 @@ route.get("/checkuser/:id", verifyUser, (req, res, next) => {
 });
 
 // IDで検索
-route.get("/:id", getSingleUser);
-
+route.get("/:id", verifyUser, getSingleUser);
 //===============================================POST
+
 //===============================================PUT
 // 更新
-route.put("/:id", updateUser);
+route.put("/:id", verifyUser, updateUser);
 //===============================================DELETE
 // 削除
-route.delete("/:id", deleteUser);
+route.delete("/:id", verifyUser, deleteUser);
 export default route;
