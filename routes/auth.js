@@ -1,9 +1,15 @@
+// outer module
 import { Router } from "express";
 
+// inner module
+import { register, login } from "../controller/auth.js";
 const route = Router();
 
-route.get("/", (req, res) => {
-  res.send("auth endpoint");
-});
+//===============================================GET
+//===============================================POST
+route.post("/register", register);
+route.post("/login", login);
+//===============================================PUT
+//===============================================DELETE
 
 export default route;
