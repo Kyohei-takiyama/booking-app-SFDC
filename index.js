@@ -2,10 +2,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 
 // inner module
 import { connectMongoDB } from "./controller/mongodb.js";
-import { castErrorHandler } from "./utils/error.js";
+import errorHandler from "./utils/error.js";
 
 // Router
 import authRoute from "./routes/auth.js";
@@ -16,6 +17,7 @@ import usersRoute from "./routes/users.js";
 // config
 dotenv.config();
 const app = express();
+app.use(cookieParser());
 app.use(express.json());
 const PORT = process.env.PORT || 8800;
 
@@ -29,13 +31,7 @@ app.use("/api/rooms", roomsRoute);
 app.use("/api/users", usersRoute);
 
 // Error Handring
-app.use((err, req, res, next) => {
-  if (err.name === "CastError") {
-    const customError = castErrorHandler(err.status, err.stack);
-    return res.status(customError.status).json(customError);
-  }
-  return res.status(err.status).json(err);
-});
+app.use(errorHandler);
 
 // build Server
 app.listen(PORT, () => {
